@@ -1,16 +1,15 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-
 enum Role {
   ADMIN
   SELLER
-}npx prisma validate
+}
 
 enum OrderStatus {
   PENDING
