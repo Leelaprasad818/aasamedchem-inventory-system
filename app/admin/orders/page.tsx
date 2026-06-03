@@ -1,46 +1,65 @@
-export default function AdminOrdersPage() {
-  const orders = [
+async function getOrders() {
+  const res = await fetch(
+    "http://localhost:3000/api/orders",
     {
-      id: "ORD001",
-      user: "Seller 1",
-      product: "Sugar",
-      quantity: "2 kg",
-      total: "₹160",
-      status: "Pending",
-    },
-  ];
+      cache: "no-store",
+    }
+  );
+
+  return res.json();
+}
+
+export default async function AdminOrdersPage() {
+  const orders = await getOrders();
 
   return (
     <div className="p-8">
-
       <h1 className="text-3xl font-bold mb-6">
         Order Management
       </h1>
 
-      {orders.map(order => (
-        <div
-          key={order.id}
-          className="border p-4 rounded mb-4"
-        >
-          <p>Order ID: {order.id}</p>
-          <p>User: {order.user}</p>
-          <p>Product: {order.product}</p>
-          <p>Quantity: {order.quantity}</p>
-          <p>Total: {order.total}</p>
-          <p>Status: {order.status}</p>
+      {orders.length === 0 ? (
+        <p>No Orders Found</p>
+      ) : (
+        orders.map((order: any) => (
+          <div
+            key={order.id}
+            className="border p-4 rounded mb-4"
+          >
+            <p>
+              <strong>Order ID:</strong>{" "}
+              {order.id}
+            </p>
 
-          <div className="flex gap-3 mt-3">
-            <button className="bg-green-600 text-white px-3 py-1 rounded">
-              Approve
-            </button>
+            <p>
+              <strong>Total:</strong> ₹
+              {order.totalAmount}
+            </p>
 
-            <button className="bg-red-600 text-white px-3 py-1 rounded">
-              Reject
-            </button>
+            <p>
+              <strong>Status:</strong>{" "}
+              {order.status}
+            </p>
+
+            <p>
+              <strong>Created:</strong>{" "}
+              {new Date(
+                order.createdAt
+              ).toLocaleString()}
+            </p>
+
+            <div className="flex gap-3 mt-3">
+              <button className="bg-green-600 text-white px-3 py-1 rounded">
+                Approve
+              </button>
+
+              <button className="bg-red-600 text-white px-3 py-1 rounded">
+                Reject
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
-
+        ))
+      )}
     </div>
   );
 }
