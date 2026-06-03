@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  SELLER
+}
+
+enum OrderStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
+
+  orders    Order[]
+
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  name          String
+  sku           String   @unique
+  description   String?
+
+  baseUnit      String
+
+  stockQuantity Decimal  @db.Decimal(20,6)
+
+  basePrice     Decimal  @db.Decimal(20,6)
+
+  createdAt     DateTime @default(now())
+
+  orderItems    OrderItem[]
+}
+
+model Order {
+  id          String      @id @default(cuid())
+
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+
+  totalAmount Decimal     @db.Decimal(20,6)
+
+  status      OrderStatus @default(PENDING)
+
+  createdAt   DateTime    @default(now())
+
+  items       OrderItem[]
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id])
+
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id])
+
+  quantity    Decimal  @db.Decimal(20,6)
+
+  unit        String
+
+  price       Decimal  @db.Decimal(20,6)
+}
