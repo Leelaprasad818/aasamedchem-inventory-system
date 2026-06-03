@@ -1,27 +1,34 @@
 export default function AdminDashboard() {
   return (
     <div className="p-8">
-      <h1 className="text-3xl font-bold mb-6">
+      <h1 className="text-4xl font-bold mb-8">
         Admin Dashboard
       </h1>
 
-      <div className="space-y-4">
+      <div className="grid gap-4">
 
         <a
           href="/admin/products"
-          className="block border p-4 rounded"
+          className="border p-4 rounded shadow"
         >
-          Product Management
+          📦 Manage Products
+        </a>
+
+        <a
+          href="/admin/products/new"
+          className="border p-4 rounded shadow"
+        >
+          ➕ Add Product
         </a>
 
         <a
           href="/admin/orders"
-          className="block border p-4 rounded"
+          className="border p-4 rounded shadow"
         >
-          Orders
+          📋 Manage Orders
         </a>
 
       </div>
     </div>
-  )
+  );
 }

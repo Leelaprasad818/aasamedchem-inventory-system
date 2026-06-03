@@ -1,22 +1,26 @@
-export function convertWeightToGrams(
-  value: number,
+export function convertToBaseUnit(
+  quantity: number,
   unit: string
 ) {
-  if (unit === "kg") return value * 1000
-  return value
+  switch (unit) {
+    case "kg":
+      return quantity * 1000;
+
+    case "L":
+      return quantity * 1000;
+
+    default:
+      return quantity;
+  }
 }
 
-export function convertVolumeToMl(
-  value: number,
-  unit: string
+export function calculatePrice(
+  quantity: number,
+  unit: string,
+  basePrice: number
 ) {
-  if (unit === "L") return value * 1000
-  return value
-}
+  const convertedQuantity =
+    convertToBaseUnit(quantity, unit);
 
-export function formatINR(value: number) {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-  }).format(value)
+  return convertedQuantity * basePrice;
 }

@@ -1,55 +1,45 @@
-export default function ProductsPage() {
-  const dummyProducts = [
+async function getProducts() {
+  const res = await fetch(
+    "http://localhost:3000/api/products",
     {
-      id: 1,
-      name: "Sugar",
-      unit: "g",
-      price: "0.08",
-    },
-    {
-      id: 2,
-      name: "Milk",
-      unit: "mL",
-      price: "0.05",
-    },
-  ]
+      cache: "no-store",
+    }
+  );
+
+  return res.json();
+}
+
+export default async function ProductsPage() {
+  const products = await getProducts();
 
   return (
     <div className="p-8">
-      <div className="flex justify-between mb-6">
-        <h1 className="text-3xl font-bold">
-          Products
-        </h1>
+      <h1 className="text-3xl font-bold mb-6">
+        Products
+      </h1>
 
-        <a
-          href="/admin/products/new"
-          className="bg-green-600 text-white px-4 py-2 rounded"
+      {products.map((product: any) => (
+        <div
+          key={product.id}
+          className="border p-4 rounded mb-4"
         >
-          Add Product
-        </a>
-      </div>
+          <h2 className="font-bold">
+            {product.name}
+          </h2>
 
-      <table className="w-full border">
-        <thead>
-          <tr>
-            <th className="border p-2">Name</th>
-            <th className="border p-2">Unit</th>
-            <th className="border p-2">Price</th>
-          </tr>
-        </thead>
+          <p>SKU: {product.sku}</p>
 
-        <tbody>
-          {dummyProducts.map(product => (
-            <tr key={product.id}>
-              <td className="border p-2">{product.name}</td>
-              <td className="border p-2">{product.unit}</td>
-              <td className="border p-2">
-                ₹ {product.price}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+          <p>Unit: {product.baseUnit}</p>
+
+          <p>
+            Price: ₹{product.basePrice}
+          </p>
+
+          <p>
+            Stock: {product.stockQuantity}
+          </p>
+        </div>
+      ))}
     </div>
-  )
+  );
 }
